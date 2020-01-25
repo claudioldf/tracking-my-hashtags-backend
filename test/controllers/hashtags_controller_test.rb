@@ -25,7 +25,10 @@ class HashtagsControllerTest < ActionDispatch::IntegrationTest
 
   test "should update hashtag" do
     patch hashtag_url(@hashtag), params: { hashtag: { name: "mytest2" } }, as: :json
-    assert_equal "#mytest2", Hashtag.find(@hashtag.id).name
+
+    json_response = JSON.parse(response.body)
+
+    assert_equal "#mytest2", json_response["name"]
     assert_response 200
   end
 
