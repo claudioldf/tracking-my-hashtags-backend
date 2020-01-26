@@ -30,3 +30,5 @@
 .env.test
 .env.production
 .env.development
+
+/spec/cassettes/*

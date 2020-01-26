@@ -3,18 +3,20 @@ module Services
   class TwitterSearch
 
     def initialize(adapter)
-      @adapter = adapter.new do |config|
-        config.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
-        config.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
-        config.access_token        = ENV['TWITTER_ACCESS_TOKEN']
-        config.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
-      end
+      @adapter = adapter
+      @adapter.consumer_key        = ENV['TWITTER_CONSUMER_KEY']
+      @adapter.consumer_secret     = ENV['TWITTER_CONSUMER_SECRET']
+      @adapter.access_token        = ENV['TWITTER_ACCESS_TOKEN']
+      @adapter.access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
+      @adapter.configuration
     end
 
     def search_by_hashtags(hashtags = [])
       @results = []
 
-      @response = @adapter.search("#{hashtags.join(" OR ")} -rt", result_type: "recent", lang: "pt-br", count: 5)
+      query = "#{words_to_hashtags_format(hashtags).join(" OR ")} -rt"
+
+      @response = @adapter.search(query, result_type: "recent", lang: "pt-br", count: 5)
 
       @response.each do |tweet|
         @results << {
@@ -31,6 +33,14 @@ module Services
       @results
     end
 
+    private
+
+    def words_to_hashtags_format(hashtags)
+      hashtags.map{ |hashtag|
+        hashtag = '#' + hashtag unless hashtag[0] == '#'
+        hashtag
+      }
+    end
   end
 
 end
