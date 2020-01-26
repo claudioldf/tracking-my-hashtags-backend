@@ -1,5 +1,5 @@
 # About
-The project is a backend API application build over Ruby on Rails framework, where we can tracking messages on Twitter filtering by hashtags.
+The project is a backend API application build using Ruby on Rails framework, where we can tracking messages on Twitter filtering by hashtags.
 
 The API has the following features:
 - Endpoint to create/remove hashtag
@@ -9,46 +9,60 @@ Demo: https://tracking-my-hashtags.herokuapp.com/
 
 There is an frontend application build using Angular 7, and you can check it on: https://github.com/claudioldf/tracking-my-hashtags-frontend
 
-# General
-  * Ruby version: 2.7
+This project uses:
+  - Ruby 2.7.0
+  - Rails 6.0.2
+  - Docker and docker-compose
 
-  * System dependencies:
-    - Ruby
-    - Rails
-    - Docker / docker-compose (optional)
-
+<br/>
 
 # Configuration
 
+## Docker (opcional, but recommended)
+Firstly you need docker and docker-compose installed on the environment that you need to run this app.
+Check:
+- https://docs.docker.com/install/
+- https://docs.docker.com/compose/install/
 
-## Docker (build and run over docker-compose)
-In order to run this project, you should enter on terminal:
+If you already have or already setup docker environment, you can just build de images and turn it up.
+Thus, run this command on terminal to proceed:
 ```bash
 # Build the docker image
 docker-compose build
 
-# Turn the containers up
+# Turn the containers up (it also will pull docker postgres images if you haven't from the official repository)
 docker-compose up
-
-# Runs bundle commands:
-# Eg.:
-docker-compose run app_backend rake db:create
 ```
 
-
-## Database creation
-Enter the following commands to setup the application database:
-```
-docker-compose run app_backend rake db:create
-docker-compose run app_backend rake db:migrateash
-```
-
-## Database initialization
-TODO
-
-## How to run the test suite
+## Application setup
+### 1. Setup dotenv files:
+Copy .env.sample file to .env and .env.test.sample to .env.test, and change the keys/tokens/secrets to your twitter access data
 ```bash
-docker run -it app_backend rspec
+cp .env.sample .env
+cp .env.test.sample .env
+```
+
+### 2. Create the database and runs the migrations
+```bash
+# 1. Create de development and testing database
+# If you have docker:
+docker exec -it app_backend rails db:create
+# Otherwise
+bundle exec rails db:create
+
+
+# 2. Runs migrations
+# If you have docker:
+docker exec -it app_backend rails db:migrate
+# Otherwise
+bundle exec rails db:migrate
+```
+
+**NOTE** If you remove the app_database container, the data persisted on database will be loose, because we didn't build the docker volume. In order to persist data you have to create a volume. See: https://hub.docker.com/_/postgres
+
+### 3. Run the test suite
+```bash
+docker exec -it app_backend bundle exec rspec
 ```
 
 <br/>
@@ -66,7 +80,7 @@ docker run -it app_backend rspec
 curl -X POST \
   -H "Content-Type: application/json" \
   -d '{"hashtag":{"name": "ruby"}}' \
-  https://tracking-my-hashtags.herokuapp.com/hashtags
+  http://localhost:3000/hashtags
 ```
 ### Response example:
 ```json
@@ -87,7 +101,7 @@ curl -X POST \
 ```bash
 curl -X GET \
   -H "Content-Type: application/json" \
-  https://tracking-my-hashtags.herokuapp.com/hashtags
+  http://localhost:3000/hashtags
 ```
 ### Response example:
 ```json
@@ -110,7 +124,7 @@ curl -X GET \
 ```bash
 curl -X GET \
   -H "Content-Type: application/json" \
-  https://tracking-my-hashtags.herokuapp.com/messages
+  http://localhost:3000/messages
 ```
 
 ### Response example:
