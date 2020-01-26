@@ -1,5 +1,5 @@
 class HashtagsController < ApplicationController
-  before_action :set_hashtag, only: [:show, :update, :destroy]
+  before_action :set_hashtag, only: [:update, :destroy]
 
   # GET /hashtags
   def index
@@ -8,26 +8,12 @@ class HashtagsController < ApplicationController
     render json: @hashtags
   end
 
-  # GET /hashtags/1
-  def show
-    render json: @hashtag
-  end
-
   # POST /hashtags
   def create
     @hashtag = Hashtag.new(hashtag_params)
 
     if @hashtag.save
       render json: @hashtag, status: :created, location: @hashtag
-    else
-      render json: @hashtag.errors, status: :unprocessable_entity
-    end
-  end
-
-  # PATCH/PUT /hashtags/1
-  def update
-    if @hashtag.update(hashtag_params)
-      render json: @hashtag
     else
       render json: @hashtag.errors, status: :unprocessable_entity
     end
