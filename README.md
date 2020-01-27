@@ -5,7 +5,8 @@ The API has the following features:
 - Endpoint to create/remove hashtag
 - Endpoint to fetch the twitter messages based on the the hashtag that you added or filtered.
 
-Demo: https://tracking-my-hashtags.herokuapp.com/
+Demo: https://tracking-my-hashtags-backend.herokuapp.com/messages
+Complete Demo: (Backend+Frontend): https://tracking-my-hashtags-frontend.herokuapp.com/messages
 
 There is an frontend application build using Angular 7, and you can check it on: https://github.com/claudioldf/tracking-my-hashtags-frontend
 
